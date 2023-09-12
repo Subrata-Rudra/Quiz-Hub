@@ -80,9 +80,6 @@ const TestPage = () => {
     });
   };
   const handleSubmit = () => {
-    // You can implement your logic to grade the test here
-    // For now, we'll simply log the selected answers to the console
-    // console.log("Selected Answers:", selectedAnswers);
     console.log("answers are: ");
     console.log(selectedAnswers);
     alert("Submitted test");

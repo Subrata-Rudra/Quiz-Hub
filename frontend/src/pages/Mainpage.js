@@ -1,16 +1,3 @@
-// import React from "react";
-// import Navbar from "../components/others/navbar";
-// function Mainpage() {
-//   return (
-//     <>
-//       <Navbar />
-//       <h1></h1>
-//     </>
-//   );
-// }
-
-// export default Mainpage;
-
 import React from "react";
 import { Box, Center, Heading, Text, Button, Image } from "@chakra-ui/react";
 import Navbar from "../components/others/navbar";
