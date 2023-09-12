@@ -122,7 +122,7 @@ const TestPage = () => {
           <option value="hard">Hard</option>
         </Select>
         <VStack spacing={4}>
-          <Text fontSize="3xl" fontWeight="bold" color="white">
+          <Text fontSize="2xl" fontWeight="bold" color="white">
             Quiz of {lang_id.toUpperCase()} (LEVEL: {category.toUpperCase()})
           </Text>
           <form>

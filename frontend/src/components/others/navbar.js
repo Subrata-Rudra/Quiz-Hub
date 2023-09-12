@@ -14,7 +14,7 @@ const Navbar = () => {
   };
   const user = JSON.parse(localStorage.getItem("userInfo"));
   return (
-    <Flex align="center" bg="blue.500" p={4} color="white" style={navbarStyle}>
+    <Flex align="center" bg="blue.500" p={4} color="white" fontSize="xl" style={navbarStyle}>
       <Link href="/testpage" style={linkStyle}>
         <Box display="flex" alignItems="center" mr={4}>
           <Text>Give Test</Text>

@@ -1,22 +1,50 @@
 import React, { useState, useEffect } from "react";
-import { Box, Text, Button, Select } from "@chakra-ui/react";
+import { Box, Text, Select } from "@chakra-ui/react";
 import axios from "axios";
+import Chart from "react-apexcharts";
 import Navbar from "./navbar";
-import { Line } from "react-chartjs-2";
 
 const PerformanceGraph = () => {
   const [lang_id, setLangId] = useState("");
   const [performanceData, setPerformanceData] = useState([]);
   const [languages, setLanguages] = useState([]);
+  const [initialRenderLangId, setInitialRenderLangId] = useState(true);
+  const [initialRenderPerformanceData, setInitialRenderPerformanceData] =
+    useState(true);
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
-  const [chartData, setChartData] = useState({
-    labels: [], // Labels for X-axis (e.g., 1, 2, 3, ...)
-    datasets: [
+
+  const [chartScoreData, setChartScoreData] = useState({
+    options: {
+      chart: {
+        id: "line-chart",
+      },
+      xaxis: {
+        categories: [], // X-axis labels
+      },
+      colors: ["#327da8"],
+    },
+    series: [
       {
-        label: "Score Percent",
-        data: [], // Score Percent values (e.g., 100, 50, 50, ...)
-        fill: false,
-        borderColor: "teal", // Line color
+        name: "Score Percent",
+        data: [], // Score Percent values
+      },
+    ],
+  });
+
+  const [chartAccuracyData, setChartAccuracyData] = useState({
+    options: {
+      chart: {
+        id: "line-chart",
+      },
+      xaxis: {
+        categories: [], // X-axis labels
+      },
+      colors: ["#46a832"],
+    },
+    series: [
+      {
+        name: "Accuracy",
+        data: [], // Accuracy values
       },
     ],
   });
@@ -34,7 +62,6 @@ const PerformanceGraph = () => {
         config
       );
       setLanguages(response.data);
-      console.log("Fetched languages:", response.data);
     } catch (error) {
       console.error("Error fetching language data:", error);
     }
@@ -53,23 +80,45 @@ const PerformanceGraph = () => {
         config
       );
       setPerformanceData(response.data);
-      updateChartData();
     } catch (error) {
       console.error("Error fetching performance data:", error);
     }
   };
-
-  const updateChartData = (performanceData) => {
-    const labels = performanceData.map((item, index) => index + 1); // Create labels (1, 2, 3, ...)
+  const updateChartScoreData = () => {
+    const categories = performanceData.map((item, index) => String(index + 1));
     const scorePercentData = performanceData.map((item) => item.score_percent);
-
-    setChartData({
-      ...chartData,
-      labels: labels,
-      datasets: [
+    setChartScoreData({
+      options: {
+        ...chartScoreData.options,
+        xaxis: {
+          ...chartScoreData.options.xaxis,
+          categories: categories,
+        },
+      },
+      series: [
         {
-          ...chartData.datasets[0],
+          ...chartScoreData.series[0],
           data: scorePercentData,
+        },
+      ],
+    });
+  };
+
+  const updateChartAccuracyData = () => {
+    const categories = performanceData.map((item, index) => String(index + 1));
+    const accuracyData = performanceData.map((item) => item.accuracy);
+    setChartAccuracyData({
+      options: {
+        ...chartAccuracyData.options,
+        xaxis: {
+          ...chartAccuracyData.options.xaxis,
+          categories: categories,
+        },
+      },
+      series: [
+        {
+          ...chartAccuracyData.series[0],
+          data: accuracyData,
         },
       ],
     });
@@ -80,28 +129,42 @@ const PerformanceGraph = () => {
   }, []);
 
   useEffect(() => {
-    console.log("lang_id is : " + lang_id);
-    if (lang_id) {
-      fetchData();
+    if (initialRenderLangId) {
+      // Skip the initial render
+      setInitialRenderLangId(false);
+      return;
     }
+    fetchData();
   }, [lang_id]);
 
   useEffect(() => {
-    console.log("Performance data is : ", performanceData);
+    if (initialRenderPerformanceData) {
+      // Skip the initial render
+      setInitialRenderPerformanceData(false);
+      return;
+    }
+    if (performanceData.length > 0) {
+      updateChartScoreData(performanceData);
+      updateChartAccuracyData(performanceData);
+    } else {
+      window.location.reload();
+    }
   }, [performanceData]);
 
   return (
     <>
       <Navbar />
-
       <Box
         p={4}
         borderWidth="1px"
         borderRadius="md"
         background="white"
         textAlign="center"
+        width="100vw"
+        display="flex"
+        flexDirection="column"
       >
-        <Text fontSize="xl" fontWeight="bold" mb={4} mt={12} pt={5}>
+        <Text fontSize="3xl" fontWeight="bold" mb={7} mt={12} pt={5}>
           Performance Graph
         </Text>
         <Select
@@ -115,16 +178,44 @@ const PerformanceGraph = () => {
             </option>
           ))}
         </Select>
-        <Button
-          colorScheme="teal"
-          mt={4}
-          onClick={fetchData}
-          isDisabled={!lang_id}
-        >
-          Get Performance Graph
-        </Button>
-        {/* Display performance graph here using the data from `performanceData` */}
-        {/* <Line data={performanceData} options={{ maintainAspectRatio: false }} /> */}
+        {performanceData.length > 0 ? (
+          <Box>
+            <Box mt={7}>
+              <Text fontSize="2xl" color="brown" fontWeight="bold">
+                Language: {lang_id.toUpperCase()}
+              </Text>
+              <Box mt={5}>
+                <Text fontSize="2xl" fontWeight="bold" color="blue">
+                  Score Percentage Graph
+                </Text>
+                <Chart
+                  options={chartScoreData.options}
+                  series={chartScoreData.series}
+                  type="line"
+                  height={250}
+                />
+              </Box>
+            </Box>
+            <Box>
+              <Box mt={10}>
+                <Text fontSize="2xl" fontWeight="bold" color="green">
+                  Accuracy Graph
+                </Text>
+                <Chart
+                  options={chartAccuracyData.options}
+                  series={chartAccuracyData.series}
+                  type="line"
+                  height={250}
+                  color="green"
+                />
+              </Box>
+            </Box>
+          </Box>
+        ) : (
+          <Box mt={10}>
+            <Text fontSize="xl">No data to show</Text>
+          </Box>
+        )}
       </Box>
     </>
   );
