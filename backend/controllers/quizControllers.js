@@ -100,6 +100,10 @@ const getAnswers = expressAsyncHandler(async (req, res) => {
       throw new Error(err);
     }
   }
+  let accuracy_val = 0;
+  if (totalMarks !== unAttempted) {
+    accuracy_val = (positiveMarks * 100) / (totalMarks - unAttempted);
+  }
   const report = {
     totalMarks: totalMarks,
     corrected: positiveMarks,
@@ -108,7 +112,7 @@ const getAnswers = expressAsyncHandler(async (req, res) => {
     unAttempted: unAttempted,
     score: positiveMarks - negativeMarks / 2,
     scorePercentage: ((positiveMarks - negativeMarks / 2) * 100) / totalMarks,
-    accuracy: (positiveMarks * 100) / (totalMarks - unAttempted),
+    accuracy: accuracy_val,
   };
   const jsonContent = JSON.stringify(report);
   res.status(200).send(jsonContent);
@@ -118,7 +122,7 @@ const getAnswers = expressAsyncHandler(async (req, res) => {
       user_id: uid,
       language_id: lang_id,
       score_percent: ((positiveMarks - negativeMarks / 2) * 100) / totalMarks,
-      accuracy: (positiveMarks * 100) / (totalMarks - unAttempted),
+      accuracy: accuracy_val,
     };
     const h = await History.create(newChapter);
   } catch (err) {

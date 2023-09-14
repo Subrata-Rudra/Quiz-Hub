@@ -1,5 +1,16 @@
 import React, { useState, useEffect } from "react";
-import { Box, Text, Select } from "@chakra-ui/react";
+import {
+  Box,
+  Text,
+  Select,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalBody,
+  ModalCloseButton,
+  useDisclosure,
+} from "@chakra-ui/react";
 import axios from "axios";
 import Chart from "react-apexcharts";
 import Navbar from "./navbar";
@@ -11,6 +22,7 @@ const PerformanceGraph = () => {
   const [initialRenderLangId, setInitialRenderLangId] = useState(true);
   const [initialRenderPerformanceData, setInitialRenderPerformanceData] =
     useState(true);
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
 
   const [chartScoreData, setChartScoreData] = useState({
@@ -153,6 +165,16 @@ const PerformanceGraph = () => {
 
   return (
     <>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Response Details</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            
+          </ModalBody>
+        </ModalContent>
+      </Modal>
       <Navbar />
       <Box
         p={4}

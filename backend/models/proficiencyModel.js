@@ -8,7 +8,7 @@ const proficiencySchema = mongoose.Schema(
       required: true,
     },
     language_id: { type: String, required: true },
-    proficiencyLevel: { type: String, required: true },
+    proficiencyLevel: { type: String, required: true, default: "Apprentice" },
   },
   { timestamps: true }
 );

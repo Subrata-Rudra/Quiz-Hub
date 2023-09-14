@@ -18,6 +18,7 @@ const LeaderboardPage = () => {
   const [lang_id, setLangId] = useState("");
   const userInfo = JSON.parse(localStorage.getItem("userInfo"));
   const [languages, setLanguages] = useState([]);
+  const [shouldShow, setShouldShow] = useState(false);
 
   const fetchLanguages = async () => {
     try {
@@ -63,6 +64,11 @@ const LeaderboardPage = () => {
     };
 
     getLeaderboard(lang_id);
+    if (lang_id !== "") {
+      setShouldShow(true);
+    } else {
+      setShouldShow(false);
+    }
   }, [lang_id]);
 
   return (
@@ -81,9 +87,17 @@ const LeaderboardPage = () => {
         width="100%"
         height="100%"
       >
-        <Text fontSize="xl" fontWeight="bold" mb={4} mt={12} pt={5}>
-          Leaderboard for {lang_id.toUpperCase()}
-        </Text>
+        {shouldShow ? (
+          <Text fontSize="xl" fontWeight="bold" mb={4} mt={12} pt={5}>
+            Leaderboard for {lang_id.toUpperCase()}
+          </Text>
+        ) : (
+          <>
+            <Text fontSize="xl" fontWeight="bold" mb={4} mt={12} pt={5}>
+              Leaderboard
+            </Text>
+          </>
+        )}
         <Select
           placeholder="Select Language"
           value={lang_id}
