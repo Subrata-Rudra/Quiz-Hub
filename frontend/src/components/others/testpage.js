@@ -16,6 +16,7 @@ import {
   ModalFooter,
   ModalCloseButton,
   useDisclosure,
+  Center,
 } from "@chakra-ui/react";
 import axios from "axios";
 import Navbar from "./navbar";
@@ -145,7 +146,7 @@ const TestPage = () => {
       onOpen();
     } catch (error) {
       console.error("Error submitting test:", error);
-      alert("Error submitting test. Please try again later.");
+      alert("Error submitting test. Please try again.");
     }
   };
 
@@ -154,7 +155,10 @@ const TestPage = () => {
       <Navbar />
       <Modal isOpen={isOpen} onClose={onClose} size="2xl" isCentered>
         <ModalOverlay />
-        <ModalContent textAlign="center">
+        <ModalContent
+          textAlign="center"
+          maxW={{ base: "95%", md: "lg", lg: "2xl" }}
+        >
           <ModalHeader fontSize="3xl">Quiz Result</ModalHeader>
           <ModalCloseButton />
           <ModalBody fontSize="xl">
@@ -259,9 +263,11 @@ const TestPage = () => {
                   </RadioGroup>
                 </Box>
               ))}
-              <Button colorScheme="blue" mt={4} onClick={handleSubmit}>
-                Submit Test
-              </Button>
+              <Center>
+                <Button colorScheme="blue" mt={4} onClick={handleSubmit}>
+                  Submit Test
+                </Button>
+              </Center>
             </form>
           </VStack>
         ) : (

@@ -85,8 +85,9 @@ const ProfilePage = () => {
             Profile
           </Text>
           <Text mt={2} fontSize="xl">
-            Name: {user.username}
+            Role: {userInfo.isTeacher ? <>Teacher</> : <>Student</>}
           </Text>
+          <Text fontSize="xl">Name: {user.username}</Text>
           <Text fontSize="xl">Email: {user.email}</Text>
           <Button colorScheme="red" mt={5} onClick={handleLogout}>
             Logout

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FormControl, FormLabel } from "@chakra-ui/form-control";
 import { Input, InputGroup, InputRightElement } from "@chakra-ui/input";
 import { VStack } from "@chakra-ui/layout";
-import { Button, useToast } from "@chakra-ui/react";
+import { Button, useToast, Select } from "@chakra-ui/react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -12,6 +12,7 @@ const Signup = () => {
   const [email, setEmail] = useState();
   const [confirmpassword, setConfirmpassword] = useState();
   const [password, setPassword] = useState();
+  const [isTeacher, setIsTeacher] = useState(false);
   const [loading, setLoading] = useState();
   const toast = useToast();
   const navigate = useNavigate();
@@ -53,7 +54,7 @@ const Signup = () => {
 
       const { data } = await axios.post(
         "http://localhost:5000/user",
-        { name, email, password },
+        { name, email, isTeacher, password },
         config
       );
 
@@ -104,6 +105,23 @@ const Signup = () => {
           }}
           autoComplete="off"
         />
+      </FormControl>
+      <FormControl isRequired>
+        <FormLabel>
+          Are you a teacher ? (Only teachers can upload questions)
+        </FormLabel>
+        <Select
+          background="white"
+          mt={2}
+          placeholder="Are You A Teacher"
+          textAlign="center"
+          onChange={(e) => {
+            setIsTeacher(e.target.value.toString() === "true");
+          }}
+        >
+          <option value="true">Yes</option>
+          <option value="false">No</option>
+        </Select>
       </FormControl>
       <FormControl id="password" isRequired>
         <FormLabel>Password</FormLabel>

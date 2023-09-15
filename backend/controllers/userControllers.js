@@ -3,7 +3,7 @@ const User = require("../models/userModel");
 const generateToken = require("../config/generateToken");
 
 const registerUser = expressAsyncHandler(async (req, res) => {
-  const { name, email, password } = req.body;
+  const { name, email, password, isTeacher } = req.body;
   if (!name || !email || !password) {
     res.status(400);
     throw new Error("Please enter all the fields");
@@ -16,17 +16,28 @@ const registerUser = expressAsyncHandler(async (req, res) => {
     throw new Error("User already exists");
   }
 
-  const user = await User.create({
-    name,
-    email,
-    password,
-  });
+  let user;
+  if (isTeacher) {
+    user = await User.create({
+      name,
+      email,
+      password,
+      isTeacher,
+    });
+  } else {
+    user = await User.create({
+      name,
+      email,
+      password,
+    });
+  }
 
   if (user) {
     res.status(201).json({
       _id: user._id,
       name: user.name,
       email: user.email,
+      isTeacher: user.isTeacher,
       token: generateToken(user._id),
     });
   } else {
@@ -43,6 +54,7 @@ const authUser = expressAsyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      isTeacher: user.isTeacher,
       token: generateToken(user._id),
     });
   } else {
