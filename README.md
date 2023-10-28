@@ -1,6 +1,5 @@
 # Quiz-Hub
 ### Live Here ➡️ https://quiz-hub-by-subrata-rudra.vercel.app/
-Assignment for Emitrr Fullstack Internship
 ## TECH STACK USED:
 ### BACKEND:
 NODE JS, EXPRESS JS
